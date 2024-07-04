@@ -1,5 +1,5 @@
 const { parentPort } = require("worker_threads");
-
+const { AccountNames, AccessAccounts } = require("./Scen2Accounts.js");
 const { pack, unpack } = require("msgpackr"),
   WebSocket = require("ws"),
   { WebSocketServer } = WebSocket,
@@ -9,8 +9,7 @@ const { pack, unpack } = require("msgpackr"),
   perf_hooks = require("perf_hooks"),
   _performance = perf_hooks.performance;
 let secret = {},
-  ____ = [],
-  AccountInfo = {};
+  ____ = [];
 const checkName = function ($) {
   return !0;
 };
@@ -151,8 +150,15 @@ const main = function (tankData, args) {
   let server = new WebSocketServer({ noServer: !0 });
   httpServer.on("upgrade", ($, e, t) => {
     let a = !0,
-      n = {};
+      n = {
+        "scenexe2-accountname": "",
+        "scenexe2-savecode": "",
+        "scenexe2-uid": "",
+        "scenexe2-lastteam": "",
+        "scenexe2-accountdata": "",
+      };
     for (let i in $.headers) i.startsWith("scenexe2") && (n[i] = $.headers[i]);
+    console.log($.headers)
     let _ = url.parse($.url);
     Object.fromEntries(new url.URLSearchParams(_.query));
     let s = _.pathname,
@@ -7371,12 +7377,14 @@ const main = function (tankData, args) {
           ($.accountName = $._headers["scenexe2-accountname"].toLowerCase()),
           ($.accountNameParsed = $._headers["scenexe2-accountname"]),
           console.log($.accountName, $.accountNameParsed)));
-          console.log("headers ", $._headers);
+    console.log("headers", $._headers);
     let t = function ($) {
       return $;
     };
     $.sendPacket = function (e) {
-      if(game.codes.recieve[e] !== 1) {console.log(e, arguments[1])}
+      if (game.codes.recieve[e] !== 1) {
+        console.log(e, arguments[1]);
+      }
       e in game.codes.recieve &&
         $.send &&
         (arguments.length > 1
@@ -7419,7 +7427,7 @@ const main = function (tankData, args) {
             if ("ping" === n) return;
             if ("createAccount" === n) console.log("test");
             if ("login" === n) {
-              LoginSuccess = args.AccessAccounts.Login(t[1]);
+              LoginSuccess = AccessAccounts.Login(t[1]);
               console.log(LoginSuccess);
               if (LoginSuccess) {
                 ($.accountNameParsed = t[1][0]),
@@ -8029,9 +8037,6 @@ const main = function (tankData, args) {
       addBot,
       ____: function ($) {
         ____ = $;
-      },
-      AccountInfoSet: function ($) {
-        AccountInfo = $;
       },
     }
   );

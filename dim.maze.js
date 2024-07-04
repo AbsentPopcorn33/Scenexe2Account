@@ -43,6 +43,7 @@
         setTimeout(function() {
         })                       // spawn all tanks at center
       },
+      isMain: true,
         spawnPolygon: function ($) { //let me look at scen2.js - $ is the dim //so i can for example say if ($ = whatever dim i pick){whatever happens to something} //$ is the current dim data so you can get the length of the polygon list - how many polygons exist / let me make a thing to count polygons with more that _ sides // ok
 //          console.log($.polygons[0].sides)
 let PolygonSideCount = 0;

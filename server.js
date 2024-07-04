@@ -1,22 +1,21 @@
 const fs = require("fs");
 const fetch = require("fetch").fetchUrl;
-const util = require("util");
-let {Accounts, CommandAccess, AccessAccounts} = require("./Scen2Accounts.js")
-console.log(CommandAccess)
-console.log(Accounts)
-AccessAccounts.Add(["test", "passwordTest"])
+let { Accounts, CommandAccess, AccessAccounts } = require("./Scen2Accounts.js");
+console.log(CommandAccess);
+AccessAccounts.Add(["test", "passwordTest"]);
 const main = function (scenexe2) {
   let options = {
     parentPort: {
       postMessage: function ($) {
         if ($[0] == "playerCount") {
           BotData[$[0]] = $[1];
-        }else console.log($);
+        } else console.log($);
       },
     },
     port: 3000,
     testing: 1,
-    start: `load('./dim-nahm8.js'), load('./dim-sandbox.js'), load('./commands.js'), load('./dim.maze.js')`,
+    start: `load('./dim-nahm8.js'), load('./dim-sandbox.js'), load('./commands.js')`,
+    //, load('./dim.maze.js')
     secret: {
       p1: "a",
       p2: "b",
@@ -25,15 +24,14 @@ const main = function (scenexe2) {
     },
     autoAdmin: "*",
     standalone: 1,
-    AccessAccounts: AccessAccounts,
   };
-  eval(fs.readFileSync("./DCBot.js", "utf8"));
-  let BotData = Object()
-  console.log(BotData)
+
   let data = scenexe2.run(options);
   //  data.dimension.dims.ffa.gleaming = 1
   data.____(CommandAccess);
-  data.AccountInfoSet(Accounts)
+  eval(fs.readFileSync("./DCBot.js", "utf8"));
+  let BotData = Object();
+  console.log(BotData);
 };
 
 Scen2 = fs.readFileSync("./scenexe2.js");

@@ -1,4 +1,9 @@
-const { Client, Events, GatewayIntentBits } = require("discord.js");
+const {
+  Client,
+  Events,
+  GatewayIntentBits,
+  GuildMember,
+} = require("discord.js");
 const fs = require("node:fs");
 const { token } = require("./DCConfig.json");
 const DiscordClient = new Client({
@@ -9,36 +14,23 @@ const DiscordClient = new Client({
     GatewayIntentBits.MessageContent,
   ],
 });
-prefix = "$"
+prefix = "$";
 let DimNames = { ffa: "Free For All", testing: "Name Testing" };
 DiscordClient.login(token);
-const { PrefixCommands, SlashCommands, ClientImport } = require("./DCCommands.js");
+const {
+  PrefixCommands,
+  SlashCommands,
+  ImportData,
+} = require("./DCCommands.js");
 DiscordClient.on(Events.ClientReady, (c) => {
-  ClientImport(DiscordClient)
+  ImportData(DiscordClient);
   console.log(`✅${c.user.tag} is online!`);
 });
 
+//console.log(data.commands.rules)
 console.log(PrefixCommands);
 DiscordClient.on("messageCreate", (message) => {
   if (message.author.bot) return; // Ignore bot messages
-  if (message.content.startsWith(`${prefix}test`)) {
-    message.reply("Bot is online!");
-  }
-  if (message.content.startsWith(`${prefix}playerCount`)) {
-    console.log(util.format(BotData));
-    let Reply = "";
-    playerCount = BotData["playerCount"];
-    for (index in playerCount) {
-      Reply +=
-        (DimNames[index]
-          ? DimNames[index] + ` (${index})`
-          : index.toUpperCase()) +
-        ": " +
-        playerCount[index] +
-        "\n";
-    }
-    message.reply(Reply);
-  }
 
   if (message.content.startsWith(`${prefix}say`)) {
     console.log(message.author.globalName + ` (${message.author.username})`);
@@ -47,10 +39,19 @@ DiscordClient.on("messageCreate", (message) => {
     }
   }
   if (message.content.startsWith(`$`)) {
-    for (index in PrefixCommands) {
-      if (message.content.indexOf(index) === 1) {
-        PrefixCommands[index](message);
-      }
+    Command = message.content.substring(
+      1,
+      message.content.indexOf(" ") === -1
+        ? message.content.length
+        : message.content.indexOf(" ")
+    );
+    if (PrefixCommands[Command]) {
+      DiscordClient.options.presence.status = "away";
+      console.log(message) 
+      console.log(message.guild.members.cache.get(message.author.id)); //try add roles
+      PrefixCommands[Command](message, { BotData, DimNames, data });
+    } else {
+      console.log("Command Doesnt Exist");
     }
   }
 });
