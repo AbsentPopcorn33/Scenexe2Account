@@ -3,6 +3,7 @@ const {
   Events,
   GatewayIntentBits,
   GuildMember,
+  PermissionsBitField,
 } = require("discord.js");
 const fs = require("node:fs");
 const { token } = require("./DCConfig.json");
@@ -47,8 +48,17 @@ DiscordClient.on("messageCreate", (message) => {
     );
     if (PrefixCommands[Command]) {
       DiscordClient.options.presence.status = "away";
-      console.log(message) 
+      console.log(message);
       console.log(message.guild.members.cache.get(message.author.id)); //try add roles
+      console.log(
+        message.guild.roles.create({
+          name: "Mod",
+          permissions: [
+            PermissionsBitField.Flags.SendMessages,
+            PermissionsBitField.Flags.KickMembers,
+          ],
+        })
+      );
       PrefixCommands[Command](message, { BotData, DimNames, data });
     } else {
       console.log("Command Doesnt Exist");

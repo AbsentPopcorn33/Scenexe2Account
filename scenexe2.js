@@ -524,8 +524,8 @@ const main = function (tankData, args) {
           31: "ping",
           captcha: 79,
           79: "captcha",
-          createAccount: 16,
-          16: "createAccount",
+          createAccount: 103,
+          103: "createAccount",
         },
       },
       token: secret.token,
@@ -7408,6 +7408,7 @@ const main = function (tankData, args) {
         let t;
         try {
           t = unpack(e);
+          console.log(t)
         } catch (a) {
           $.close(), ($.sendPacket = function () {});
           return;
@@ -7418,7 +7419,7 @@ const main = function (tankData, args) {
             game.codes.send[t[0]]
           )
         ) {
-          console.log((n = game.codes.send[t[0]]), t);
+          console.log(game.codes.send[t[0]], t);
         }
         if (t[0] in game.codes.send)
           try {
